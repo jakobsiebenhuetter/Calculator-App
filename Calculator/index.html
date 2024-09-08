@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+     
+      
+      body {
+       text-align: center;
+       background-color: rgb(196, 215, 241);
+      }
+
+      div {
+       margin: 30px;
+       font-family: sans-serif;
+       font-weight: 700;
+      }
+
+     #calculator-container{
+        margin: 100px auto;
+        height: 500px;
+        width: 300px;
+        background-color: grey;
+        border-radius: 6px;
+      }
+
+      h1{
+        font-family: sans-serif;
+        padding-top: 10px;
+      }
+
+      #display {
+        margin-top: 50px;
+        border-radius: 5px;
+        display: inline-block;
+        background-color: burlywood;
+        height: 30px;
+        width: 200px;
+      }
+
+      button {
+        background-color: aquamarine;
+        border-radius: 5px;
+        width: 30px;
+        height: 30px;
+      }
+
+      label{
+        font-family: sans-serif;
+        font-weight: bold;
+        border-radius: 5px;
+        margin-bottom: 5px;
+      }
+      #numberInputFirst {
+      
+        width: 30px;
+        
+      }
+
+      #numberInputSecond {
+        
+        width: 30px;
+      }
+
+      #popup {
+
+       
+        margin: 9% auto;
+        border-radius: 6px;
+        
+        padding: 50px;
+        height: 200px;
+        width: 500px;
+        background-color: rgb(154, 9, 9);
+        display: none;
+        
+        
+
+      }
+
+      #close-popup {
+        width: 90px;
+        height: 40px;
+        
+      }
+
+      #popup-background {
+        position: fixed;
+        text-align: center;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(162, 94, 46, 0.4);
+        top: 0;
+        left: 0;
+        margin: 0;
+        display: none;
+       
+      }
+    </style>
+
+    <title>Taschenrechner</title>
+  </head>
+  <body>
+    
+
+    <main>
+
+
+      <div id="popup-background">
+
+        <div id="popup">
+          <h2>Das ist ein popUp-Fenster</h2>
+          <p id="calculation-result"></p>
+          <button id="close-popup" onclick="closePopUp()">Schliesen</button>
+          
+        </div>
+        
+      </div>
+
+      <div id="calculator-container">
+        <h1>Rechner</h1>
+        <div id="display"></div>
+
+
+        <div>
+          <label>Zahl 1</label>
+          <input type="text" id="numberInputFirst" />
+
+          <label>Zahl 2</label>
+          <input type="text" id="numberInputSecond" />
+       </div>
+
+        <div>
+          <button  data-operation="+" onclick="calculate('+')">+</button>
+
+          <button  data-operation="-" onclick="calculate('-')">-</button>
+          
+          <button  data-operation="*" onclick="calculate('*')">*</button>
+
+          <button  data-operation="/" onclick="calculate('/')">/</button>
+
+          <button  id="equals" data-operation="=" onclick="popUpResult()">=</button>
+        </div>
+
+        <div>
+          <button id="clear" onclick="deleteAll()">C</button>
+        </div>
+
+        <div id="rechenwege">Rechenschritte :</div>
+      </div>
+    </main>
+
+    <script>     
+        //JavaScript code zum lernen:
+        
+      let firstNumber = "";
+      let secondNumber = "";
+      let result = 0;
+      let verlaufAnzeige;
+      let step;
+      const verlauf = {};
+
+     const display = document.getElementById("display");
+
+      function takeAndParseElements() {
+        firstNumber = parseFloat(numberInputFirst.value) //  parseFloat(document.getElementById("numberInputFirst").value);
+        secondNumber = parseFloat(document.getElementById("numberInputSecond").value);
+
+      }
+
+      
+      
+      function calculate(operation) {
+        takeAndParseElements();
+        const firstNum = document.getElementById("numberInputFirst");
+        // for(step in verlauf) {     nochmal anschauen und anders fixen und zwar mit nur einer Schleife
+        //  verlauf[step];
+     //   } 
+        switch(operation) {
+            
+            case '+':
+            result = firstNumber + secondNumber;
+            step = firstNumber.toString() + operation + secondNumber.toString()
+            display.textContent = result;
+            verlauf[step] = result;
+            console.log(verlauf[step])
+            console.log(step);
+            console.log(verlauf);
+
+            for(step in verlauf) {
+                verlauf[step];
+           }
+           verlaufAnzeige = document.getElementById('rechenwege');
+         //  verlaufAnzeige.style.display = 'block';
+                const newLabel1 = document.createElement('label');
+                newLabel1.style.backgroundColor = 'rgb(154, 210, 44)';
+                newLabel1.textContent = step + '= ' + verlauf[step] + ' ';
+                newLabel1.style.display = 'block';
+                verlaufAnzeige.append(newLabel1);
+
+                newLabel1.addEventListener('click', () => {
+                console.log(verlauf[step])                   
+                   firstNum.value = parseFloat(newLabel1.textContent.split('=')[1].trim());
+                   display.textContent = newLabel1.textContent.split('=')[1].trim();
+                });
+            break;
+            
+            case '-':
+            result = firstNumber - secondNumber;
+            display.textContent = result;
+            verlauf[firstNumber.toString() + operation + secondNumber.toString()] = result;
+            console.log(verlauf[firstNumber.toString() + operation + secondNumber.toString()])
+            console.log(firstNumber.toString() + operation + secondNumber.toString());
+            console.log(verlauf);
+
+             for(step in verlauf) {
+                verlauf[step];
+           } 
+                 verlaufAnzeige = document.getElementById('rechenwege');
+                 const newLabel2 = document.createElement('label');
+                newLabel2.style.backgroundColor = 'rgb(154, 210, 44)';
+                newLabel2.textContent = step + '= ' + verlauf[step] + ' ';
+                newLabel2.style.display = 'block';
+                verlaufAnzeige.append(newLabel2);
+
+                newLabel2.addEventListener('click', () => {
+                console.log(verlauf[step])                   
+                   firstNum.value = parseFloat(newLabel2.textContent.split('=')[1].trim());
+                   display.textContent = newLabel2.textContent.split('=')[1].trim();
+                });
+            break;
+
+            case '*':
+            result = firstNumber * secondNumber;
+            display.textContent = result;
+            verlauf[firstNumber.toString() + operation + secondNumber.toString()] = result;
+            console.log(verlauf[firstNumber.toString() + operation + secondNumber.toString()])
+            console.log(firstNumber.toString() + operation + secondNumber.toString());
+            console.log(verlauf);
+
+             for(step in verlauf) {
+                verlauf[step];
+           } 
+                 verlaufAnzeige = document.getElementById('rechenwege');
+                 const newLabel3 = document.createElement('label');
+                newLabel3.style.backgroundColor = 'rgb(154, 210, 44)';
+                newLabel3.textContent = step + '= ' + verlauf[step] + ' ';
+                newLabel3.style.display = 'block';
+                verlaufAnzeige.append(newLabel3);
+
+                newLabel3.addEventListener('click', () => {
+                console.log(verlauf[step])                   
+                   firstNum.value = parseFloat(newLabel3.textContent.split('=')[1].trim());
+                   display.textContent = newLabel3.textContent.split('=')[1].trim();
+                });
+            break;
+
+            case '/':
+            result = firstNumber / secondNumber;
+            display.textContent = result;
+            verlauf[firstNumber.toString() + operation + secondNumber.toString()] = result;
+            console.log(verlauf[firstNumber.toString() + operation + secondNumber.toString()])
+            console.log(firstNumber.toString() + operation + secondNumber.toString());
+            console.log(verlauf);
+            
+          
+             for(step in verlauf) {
+                verlauf[step];
+           } 
+                verlaufAnzeige = document.getElementById('rechenwege');
+                const newLabel4 = document.createElement('label');
+                newLabel4.style.backgroundColor = 'rgb(154, 210, 44)';
+                newLabel4.textContent = step + '= ' + verlauf[step] + ' ';
+                newLabel4.style.display = 'block';
+                verlaufAnzeige.append(newLabel4);
+
+                newLabel4.addEventListener('click', () => {
+                console.log(verlauf[step])                   
+                   firstNum.value = parseFloat(newLabel4.textContent.split('=')[1].trim());
+                   display.textContent = newLabel4.textContent.split('=')[1].trim();
+                });
+            break;
+
+            default:
+            break;
+
+        }
+        
+        
+      }
+
+      function deleteAll() {
+        for(let s in verlauf) {
+          console.log('Test');
+          delete verlauf[s];
+          
+
+      }
+      const allLabels = verlaufAnzeige.querySelectorAll('label');
+       
+      allLabels.forEach((label) => {
+        
+      verlaufAnzeige.removeChild(label);
+      });
+
+      }
+
+      const popUpWindow = window.document.getElementById('popup');
+
+      const popUpResultWindow = window.document.getElementById('calculation-result');
+      const popUpBackgroundWindow = window.document.getElementById('popup-background');
+      
+     function popUpResult() {
+      //alert(result);
+      console.log('Test');
+      
+      popUpResultWindow.textContent = 'Dein Ergebnis: ' + display.textContent;
+     // popUpResultWindow.textContent = result;
+      console.log('Test');
+      popUpWindow.style.display = 'block';
+      console.log('Test');
+      popUpBackgroundWindow.style.display = 'block';
+      console.log('Test');
+
+      }
+
+      function closePopUp() {
+      popUpWindow.style.display = 'none';
+      popUpBackgroundWindow.style.display = 'none';
+      }
+
+    </script>
+
+
+  </body>
+</html>
